@@ -1,0 +1,70 @@
+# Weather App - Requirements
+
+## System Requirements
+- Node.js 18.x or higher
+- npm 9.x or higher
+- Modern web browser with geolocation support
+
+## Node.js Dependencies
+
+### Production Dependencies
+- express ^5.2.1 - Web server framework
+- cors ^2.8.6 - Cross-origin resource sharing
+- axios ^1.13.5 - HTTP client for API requests
+- json2csv ^6.0.0-alpha.2 - CSV export functionality
+
+### Frontend Dependencies (via npm install)
+- react ^19.2.0 - UI library
+- react-dom ^19.2.0 - React DOM renderer
+- typescript ~5.9.3 - TypeScript compiler
+- vite ^7.2.4 - Build tool
+- tailwindcss ^3.4.19 - CSS framework
+- @radix-ui/react-* - UI component primitives
+- lucide-react ^0.562.0 - Icon library
+- axios ^1.13.5 - HTTP client
+
+### Dev Dependencies
+- @types/node ^24.10.1 - Node.js type definitions
+- @types/react ^19.2.5 - React type definitions
+- @vitejs/plugin-react ^5.1.1 - Vite React plugin
+- eslint ^9.39.1 - Linter
+- postcss ^8.5.6 - CSS processor
+
+## External API Requirements
+
+### OpenWeatherMap API
+- Free tier available at https://openweathermap.org/api
+- API key required for weather data
+- Rate limits: 60 calls/minute on free tier
+
+### Optional APIs
+- YouTube Data API (for location videos)
+- Google Maps API (for map integration)
+
+## Installation
+
+```bash
+# Install all dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Start backend server
+npm run server
+
+# Build for production
+npm run build
+```
+
+## Environment Variables
+
+Create a `.env` file with:
+```
+WEATHER_API_KEY=your_openweathermap_api_key
+```
+
+## Port Configuration
+
+- Frontend dev server: 5173 (Vite default)
+- Backend API server: 3001
