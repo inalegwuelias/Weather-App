@@ -1,11 +1,18 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const fs = require('fs').promises;
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import axios from 'axios';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // OpenWeatherMap API Key - Free tier
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
