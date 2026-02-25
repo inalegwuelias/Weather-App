@@ -300,11 +300,6 @@ function App() {
           <p className="text-gray-600">
             Created for Product Manager Accelerator Technical Assessment
           </p>
-          <p className="text-sm text-gray-500 mt-1">
-            <a href="https://www.linkedin.com/company/product-manager-accelerator" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-              Learn more about PM Accelerator
-            </a>
-          </p>
         </div>
 
         {/* Alerts */}
