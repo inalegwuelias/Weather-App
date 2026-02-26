@@ -8,6 +8,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
+import axios from 'axios';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +17,8 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 const hasValidApiKey = WEATHER_API_KEY && WEATHER_API_KEY !== 'your_api_key_here';
+const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
+const GEO_BASE_URL = 'http://api.openweathermap.org/geo/1.0';
 
 // Database path
 const DB_PATH = path.join(__dirname, 'database.json');
@@ -145,9 +148,21 @@ app.get('/api/weather/current', async (req, res) => {
       return res.json(generateMockWeather(location, lat, lon));
     }
 
-    // Real API call would go here
-    res.json(generateMockWeather(location, lat, lon));
+    // Real API call to OpenWeatherMap
+    let url;
+    if (lat && lon) {
+      url = `${WEATHER_BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`;
+    } else {
+      url = `${WEATHER_BASE_URL}/weather?q=${encodeURIComponent(location)}&appid=${WEATHER_API_KEY}&units=metric`;
+    }
+    
+    const response = await axios.get(url);
+    res.json(response.data);
   } catch (error) {
+    console.error('Weather API error:', error.message);
+    if (error.response?.status === 404) {
+      return res.status(404).json({ error: 'City not found' });
+    }
     res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 });
@@ -165,8 +180,21 @@ app.get('/api/weather/forecast', async (req, res) => {
       return res.json(generateMockForecast(location, lat, lon));
     }
 
-    res.json(generateMockForecast(location, lat, lon));
+    // Real API call to OpenWeatherMap
+    let url;
+    if (lat && lon) {
+      url = `${WEATHER_BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`;
+    } else {
+      url = `${WEATHER_BASE_URL}/forecast?q=${encodeURIComponent(location)}&appid=${WEATHER_API_KEY}&units=metric`;
+    }
+    
+    const response = await axios.get(url);
+    res.json(response.data);
   } catch (error) {
+    console.error('Forecast API error:', error.message);
+    if (error.response?.status === 404) {
+      return res.status(404).json({ error: 'City not found' });
+    }
     res.status(500).json({ error: 'Failed to fetch forecast data' });
   }
 });
@@ -179,14 +207,22 @@ app.get('/api/geocode', async (req, res) => {
       return res.status(400).json({ error: 'Location required' });
     }
 
-    res.json([{
-      name: location.split(',')[0].trim(),
-      lat: 40.7128 + (Math.random() - 0.5) * 10,
-      lon: -74.0060 + (Math.random() - 0.5) * 10,
-      country: 'US',
-      state: 'Demo State'
-    }]);
+    if (!hasValidApiKey) {
+      return res.json([{
+        name: location.split(',')[0].trim(),
+        lat: 40.7128 + (Math.random() - 0.5) * 10,
+        lon: -74.0060 + (Math.random() - 0.5) * 10,
+        country: 'US',
+        state: 'Demo State'
+      }]);
+    }
+
+    // Real API call to OpenWeatherMap Geocoding API
+    const url = `${GEO_BASE_URL}/direct?q=${encodeURIComponent(location)}&limit=5&appid=${WEATHER_API_KEY}`;
+    const response = await axios.get(url);
+    res.json(response.data);
   } catch (error) {
+    console.error('Geocode API error:', error.message);
     res.status(500).json({ error: 'Failed to geocode location' });
   }
 });
@@ -199,14 +235,22 @@ app.get('/api/reverse-geocode', async (req, res) => {
       return res.status(400).json({ error: 'Latitude and longitude required' });
     }
 
-    res.json([{
-      name: 'Demo City',
-      lat: parseFloat(lat),
-      lon: parseFloat(lon),
-      country: 'US',
-      state: 'Demo State'
-    }]);
+    if (!hasValidApiKey) {
+      return res.json([{
+        name: 'Demo City',
+        lat: parseFloat(lat),
+        lon: parseFloat(lon),
+        country: 'US',
+        state: 'Demo State'
+      }]);
+    }
+
+    // Real API call to OpenWeatherMap Reverse Geocoding API
+    const url = `${GEO_BASE_URL}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${WEATHER_API_KEY}`;
+    const response = await axios.get(url);
+    res.json(response.data);
   } catch (error) {
+    console.error('Reverse geocode API error:', error.message);
     res.status(500).json({ error: 'Failed to reverse geocode' });
   }
 });
