@@ -311,19 +311,24 @@ function App() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
-            🌤️ Weather App
+            Weather App
           </h1>
-          <p className="text-gray-600">
-            Technical Assessment for PM Accelerator
+          <p className="text-lg font-semibold text-gray-700 mb-1">
+            By Elias Inalegwu Daniel
           </p>
-          <a 
-            href="https://www.linkedin.com/company/product-manager-accelerator" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline text-sm"
-          >
-            Learn more about PM Accelerator →
-          </a>
+          <p className="text-gray-600">
+            Created for Product Manager Accelerator Technical Assessment
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            <a 
+              href="https://www.linkedin.com/school/pmaccelerator/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Learn more about PM Accelerator
+            </a>
+          </p>
         </div>
 
         {/* Alerts */}
