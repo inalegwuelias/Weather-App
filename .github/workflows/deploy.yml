@@ -19,41 +19,27 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
-        cache-dependency-path: 'Weather App/app/package-lock.json'
+        cache-dependency-path: 'Weather App/weather-app/package-lock.json'
     
     - name: Install dependencies
-      working-directory: ./Weather App/app
+      working-directory: ./Weather App/weather-app
       run: npm ci
     
     - name: Build frontend
-      working-directory: ./Weather App/app
+      working-directory: ./Weather App/weather-app
       run: npm run build
       
     - name: Create .env file for deployment
-      working-directory: ./Weather App/app
+      working-directory: ./Weather App/weather-app
       run: |
         echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" > .env
     
-    # Add your deployment step here
-    # Examples for different platforms:
-    
-    # For Heroku:
-    # - name: Deploy to Heroku
-    #   uses: akhileshns/heroku-deploy@v3.12.14
-    #   with:
-    #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-    #     heroku_app_name: "your-app-name"
-    #     heroku_email: "your-email@example.com"
-    #     appdir: "Weather App/app"
-    
-    # For Railway:
-    # - name: Deploy to Railway
-    #   uses: railway/cli@v2
-    #   with:
-    #     railway_token: ${{ secrets.RAILWAY_TOKEN }}
-    #   run: railway up
-    
-    # For Render:
-    # - name: Deploy to Render
-    #   run: |
-    #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+    - name: Deploy to Vercel
+      uses: vercel/action-deploy@v1
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./Weather App/weather-app
+      env:
+        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
